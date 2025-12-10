@@ -1,0 +1,158 @@
+<div class="container">
+    <div class="card">
+        <h1>⚙️ Panel de Administración</h1>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;">
+            <button
+                style="flex: 1; min-width: 150px; padding: 15px 20px; font-size: 1em; cursor: pointer;"
+                ng-style="vistaActual === 'fortunes' ? {'background': 'linear-gradient(135deg, #fb0101 0%, #ff8d00 100%)', 'color': 'white'} : {'background': '#f5f5f5', 'color': '#333', 'border': '2px solid #ddd'}"
+                ng-click="cambiarVista('fortunes')">
+                Mensajes
+            </button>
+            <button
+                style="flex: 1; min-width: 150px; padding: 15px 20px; font-size: 1em; cursor: pointer;"
+                ng-style="vistaActual === 'stats' ? {'background': 'linear-gradient(135deg, #fb0101 0%, #ff8d00 100%)', 'color': 'white'} : {'background': '#f5f5f5', 'color': '#333', 'border': '2px solid #ddd'}"
+                ng-click="cambiarVista('stats')">
+                Estadísticas
+            </button>
+            <button
+                style="flex: 1; min-width: 150px; padding: 15px 20px; font-size: 1em; cursor: pointer;"
+                ng-style="vistaActual === 'history' ? {'background': 'linear-gradient(135deg, #fb0101 0%, #ff8d00 100%)', 'color': 'white'} : {'background': '#f5f5f5', 'color': '#333', 'border': '2px solid #ddd'}"
+                ng-click="cambiarVista('history')">
+                Historial Global
+            </button>
+        </div>
+
+        <div ng-if="vistaActual === 'fortunes'">
+            <h2>Gestión de Mensajes</h2>
+
+            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3>{{ fortuneForm.editing ? 'Editar Mensaje' : 'Crear Nuevo Mensaje' }}</h3>
+                <form ng-submit="fortuneForm.editing ? actualizarFortune() : crearFortune()">
+                    <textarea
+                        ng-model="fortuneForm.message"
+                        placeholder="Escribe el mensaje de la fortuna..."
+                        rows="4"
+                        required
+                        style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-family: Arial; font-size: 1em;"
+                    ></textarea>
+                    <div style="margin-top: 10px;">
+                        <button type="submit">
+                            {{ fortuneForm.editing ? '✔ Actualizar' : '+ Crear' }}
+                        </button>
+                        <button type="button" ng-if="fortuneForm.editing" ng-click="cancelarEdicion()" class="secondary">
+                            ✕ Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div ng-if="loading" class="loading" style="color: #666;">Cargando mensajes...</div>
+
+            <table ng-if="!loading">
+                <thead>
+                <tr>
+                    <th style="width: 80px;">ID</th>
+                    <th>Mensaje</th>
+                    <th style="width: 200px;">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="fortune in fortunes">
+                    <td>{{ fortune.id }}</td>
+                    <td style="font-style: italic;">{{ fortune.message }}</td>
+                    <td>
+                        <button ng-click="editarFortune(fortune)" class="secondary" style="padding: 8px 16px; font-size: 0.9em;">
+                            ✏️
+                        </button>
+                        <button ng-click="eliminarFortune(fortune.id)" class="danger" style="padding: 8px 16px; font-size: 0.9em;">
+                            🗑️
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p ng-if="!loading" style="text-align: center; color: #666; margin-top: 20px;">
+                Total de mensajes: <strong>{{ fortunes.length }}</strong>
+            </p>
+        </div>
+
+        <div ng-if="vistaActual === 'stats'">
+            <h2>Estadísticas del Sistema</h2>
+
+            <div ng-if="loading" class="loading" style="color: #666;">Cargando estadísticas...</div>
+
+            <div ng-if="!loading && stats" class="stats-grid">
+                <div class="stat-card">
+                    <p>Total Mensajes Mostrados</p>
+                    <h3>{{ stats.total_shown }}</h3>
+                </div>
+
+                <div class="stat-card">
+                    <p>Usuarios Registrados</p>
+                    <h3>{{ stats.total_users }}</h3>
+                </div>
+            </div>
+
+            <div ng-if="!loading && stats && stats.top_messages.length > 0" style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                <h3>🏆 Top 5 Mensajes Más Mostrados</h3>
+                <table>
+                    <thead>
+                    <tr>
+                        <th style="width: 100px;">Posición</th>
+                        <th>Mensaje</th>
+                        <th style="width: 150px;">Veces Mostrado</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in stats.top_messages">
+                        <td style="font-weight: bold; font-size: 1.2em;">
+                            {{ $index + 1 }}{{ $index === 0 ? '🥇' : $index === 1 ? '🥈' : $index === 2 ? '🥉' : '' }}
+                        </td>
+                        <td style="font-style: italic;">{{ item.fortune.message }}</td>
+                        <td><strong>{{ item.total }}</strong></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div ng-if="vistaActual === 'history'">
+            <h2>Historial Global de Mensajes</h2>
+
+            <div ng-if="loading" class="loading" style="color: #666;">Cargando historial...</div>
+
+            <table ng-if="!loading && historialGlobal.length > 0">
+                <thead>
+                <tr>
+                    <th style="width: 60px;">#</th>
+                    <th style="width: 150px;">Usuario</th>
+                    <th>Mensaje</th>
+                    <th style="width: 150px;">Fecha</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in historialGlobal | limitTo:100">
+                    <td>{{ $index + 1 }}</td>
+                    <td>{{ item.user.name }}</td>
+                    <td style="font-style: italic;">{{ item.fortune.message }}</td>
+                    <td>{{ item.created_at | date:'dd/MM/yyyy HH:mm' }}</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p ng-if="!loading && historialGlobal.length > 100" style="text-align: center; color: #666; margin-top: 20px;">
+                Mostrando los últimos 100 registros de {{ historialGlobal.length }} totales
+            </p>
+
+            <p ng-if="!loading && historialGlobal.length === 0" style="text-align: center; color: #666; margin-top: 20px;">
+                No hay registros en el historial global
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button ng-click="volver()">🥠 Volver a la Galleta</button>
+        </div>
+    </div>
+</div>

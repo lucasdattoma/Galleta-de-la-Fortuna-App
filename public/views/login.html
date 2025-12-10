@@ -1,0 +1,19 @@
+<div class="form-container">
+    <h2>Iniciar Sesión</h2>
+
+    <div class="error" ng-if="error">
+        ⚠️ {{ error }}
+    </div>
+
+    <form ng-submit="login()">
+        <input type="email" ng-model="credentials.email" placeholder="Email" required>
+        <input type="password" ng-model="credentials.password" placeholder="Contraseña" required>
+        <button type="submit" ng-disabled="loading">
+            {{ loading ? 'Cargando...' : 'Iniciar Sesión' }}
+        </button>
+    </form>
+
+    <div class="link">
+        ¿No tienes cuenta? <a href="/register">Regístrate aquí</a>
+    </div>
+</div>

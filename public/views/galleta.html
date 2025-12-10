@@ -1,0 +1,29 @@
+<div class="galleta-container with-navbar">
+    <h1>🥠 Galleta de la Fortuna 🥠</h1>
+
+    <div class="galleta-section" ng-show="!galleta_abierta">
+        <img src="/imagenes/galleta.png" class="imagen-galleta" alt="Galleta cerrada">
+        <div class="galleta" ng-click="abrirGalleta()">
+            ABRE TU GALLETA
+        </div>
+    </div>
+
+    <div class="galleta-section" ng-show="galleta_abierta">
+        <div class="mensaje-container">
+            <img src="/imagenes/galleta_abierta.png" class="imagen-galleta" alt="Galleta abierta">
+            <div class="mensaje" ng-show="mensaje && !cargando">
+                {{ mensaje }}
+            </div>
+        </div>
+    </div>
+
+    <div class="loading" ng-show="cargando">
+        Cargando mensaje...
+    </div>
+
+    <div class="botones" ng-show="galleta_abierta && !cargando">
+        <button ng-click="abrirOtraGalleta()">🔄 Otra Galleta</button>
+        <button ng-click="irHistorial()">📜 Mi Historial</button>
+        <button ng-if="user.role === 'admin'" ng-click="irAdmin()">⚙️ Admin</button>
+    </div>
+</div>
