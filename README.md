@@ -14,7 +14,7 @@ Instalación
 
 1. Clonar el repositorio
 
-git clone https://github.com/tu-usuario/galleta-fortuna.git
+git clone https://github.com/lucasdattoma/Galleta-de-la-Fortuna-App.git
 cd galleta-fortuna
 
 2. Instalar dependencias de PHP
